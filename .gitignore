@@ -12,6 +12,7 @@ build/
 # Ignora toda a pasta de configurações locais do IntelliJ
 .idea/
 *.iws
+*.class
 *.iml
 *.ipr
 out/
