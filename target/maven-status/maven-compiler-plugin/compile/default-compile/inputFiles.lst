@@ -1,0 +1,7 @@
+/home/julio/Sistema_de_Biblioteca-Soft.Engineer/src/main/java/br/uel/sistemabiblioteca/Model/Aluno.java
+/home/julio/Sistema_de_Biblioteca-Soft.Engineer/src/main/java/br/uel/sistemabiblioteca/Model/Emprestimo.java
+/home/julio/Sistema_de_Biblioteca-Soft.Engineer/src/main/java/br/uel/sistemabiblioteca/Model/Livro.java
+/home/julio/Sistema_de_Biblioteca-Soft.Engineer/src/main/java/br/uel/sistemabiblioteca/Repository/AlunoRepository.java
+/home/julio/Sistema_de_Biblioteca-Soft.Engineer/src/main/java/br/uel/sistemabiblioteca/Repository/EmprestimoRepository.java
+/home/julio/Sistema_de_Biblioteca-Soft.Engineer/src/main/java/br/uel/sistemabiblioteca/Repository/LivroRepository.java
+/home/julio/Sistema_de_Biblioteca-Soft.Engineer/src/main/java/br/uel/sistemabiblioteca/SistemaBibliotecaApplication.java
