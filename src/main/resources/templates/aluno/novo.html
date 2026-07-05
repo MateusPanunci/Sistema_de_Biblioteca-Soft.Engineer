@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cadastro de Aluno')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: sidebar('alunos')}"></nav>
+
+<main class="conteudo">
+    <h1 class="titulo-pagina">Cadastro de Aluno</h1>
+    <p class="subtitulo-pagina">Preencha os dados para cadastrar um novo aluno</p>
+
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+
+    <div class="card card-formulario">
+        <div class="card-body">
+            <form th:action="@{/alunos/novo}" method="post">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome completo *</label>
+                    <input type="text" class="form-control" id="nome" name="nome"
+                           placeholder="Ex: Maria da Silva" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="ra" class="form-label">RA (Registro Acadêmico) *</label>
+                    <input type="text" class="form-control" id="ra" name="ra"
+                           placeholder="Ex: 202600123" required>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Cadastrar
+                    </button>
+                    <a th:href="@{/alunos}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
