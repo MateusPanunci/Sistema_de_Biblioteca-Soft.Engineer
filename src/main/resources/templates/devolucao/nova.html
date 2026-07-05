@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Devoluções')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: sidebar('devolucoes')}"></nav>
+
+<main class="conteudo">
+    <h1 class="titulo-pagina">Devoluções</h1>
+    <p class="subtitulo-pagina">Empréstimos ativos aguardando devolução</p>
+
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+
+    <div class="card card-tabela">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Livro(s)</th>
+                        <th>Data do empréstimo</th>
+                        <th>Devolução prevista</th>
+                        <th>Situação</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="e : ${emprestimosAtivos}">
+                        <td>
+                            <span th:text="${e.aluno.nome}">Aluno</span><br>
+                            <small class="text-muted" th:text="'RA: ' + ${e.aluno.ra}">RA</small>
+                        </td>
+                        <td th:text="${#strings.listJoin(e.livros.![titulo], ', ')}">Livros</td>
+                        <td th:text="${#temporals.format(e.dataEmprestimo, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td th:text="${#temporals.format(e.dataPrevistaDevolucao, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td>
+                            <!-- compara a data prevista com a data de hoje para indicar atraso -->
+                            <span th:if="${e.dataPrevistaDevolucao.isBefore(#temporals.createToday())}"
+                                  class="badge text-bg-danger">Em atraso</span>
+                            <span th:unless="${e.dataPrevistaDevolucao.isBefore(#temporals.createToday())}"
+                                  class="badge text-bg-success">No prazo</span>
+                        </td>
+                        <td class="text-end">
+                            <form th:action="@{/devolucoes/nova}" method="post" class="d-inline">
+                                <input type="hidden" name="emprestimoId" th:value="${e.id}">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-arrow-return-left"></i> Devolver
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(emprestimosAtivos)}">
+                        <td colspan="6" class="text-center text-muted">Nenhum empréstimo ativo no momento.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
