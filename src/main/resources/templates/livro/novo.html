@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cadastro de Livro')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: sidebar('livros')}"></nav>
+
+<main class="conteudo">
+    <h1 class="titulo-pagina">Cadastro de Livro</h1>
+    <p class="subtitulo-pagina">Preencha os dados para adicionar um novo livro ao acervo</p>
+
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+
+    <div class="card card-formulario">
+        <div class="card-body">
+            <form th:action="@{/livros/novo}" method="post">
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Título *</label>
+                    <input type="text" class="form-control" id="titulo" name="titulo"
+                           placeholder="Ex: Engenharia de Software" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="autor" class="form-label">Autor *</label>
+                    <input type="text" class="form-control" id="autor" name="autor"
+                           placeholder="Ex: Ian Sommerville" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7 mb-3">
+                        <label for="isbn" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" id="isbn" name="isbn"
+                               placeholder="Ex: 978-85-430-2497-4">
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <label for="prazoDevolucaoDias" class="form-label">Prazo de devolução (dias) *</label>
+                        <input type="number" class="form-control" id="prazoDevolucaoDias"
+                               name="prazoDevolucaoDias" min="1" value="7" required>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="reservado" name="reservado" value="true">
+                    <label class="form-check-label" for="reservado">
+                        Exemplar reservado (não pode ser emprestado)
+                    </label>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Cadastrar
+                    </button>
+                    <a th:href="@{/livros}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

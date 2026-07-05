@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Novo Empréstimo')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: sidebar('emprestimos')}"></nav>
+
+<main class="conteudo">
+    <h1 class="titulo-pagina">Novo Empréstimo</h1>
+    <p class="subtitulo-pagina">Informe o RA do aluno e selecione os livros disponíveis</p>
+
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+
+    <div class="card card-formulario">
+        <div class="card-body">
+            <form th:action="@{/emprestimos/novo}" method="post">
+                <div class="mb-4">
+                    <label for="ra" class="form-label">RA do aluno *</label>
+                    <input type="text" class="form-control" id="ra" name="ra"
+                           placeholder="Ex: 202600123" required>
+                </div>
+
+                <label class="form-label">Livros disponíveis *</label>
+
+                <div class="lista-livros mb-2" th:if="${!#lists.isEmpty(livrosDisponiveis)}">
+                    <div class="form-check" th:each="livro : ${livrosDisponiveis}">
+                        <input class="form-check-input" type="checkbox" name="livroIds"
+                               th:value="${livro.id}" th:id="'livro-' + ${livro.id}">
+                        <label class="form-check-label d-flex justify-content-between w-100"
+                               th:for="'livro-' + ${livro.id}">
+                            <span>
+                                <strong th:text="${livro.titulo}">Título</strong><br>
+                                <small class="text-muted" th:text="${livro.autor}">Autor</small>
+                            </span>
+                            <small class="text-muted align-self-center"
+                                   th:text="'Prazo: ' + ${livro.prazoDevolucaoDias} + ' dias'">Prazo</small>
+                        </label>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(livrosDisponiveis)}" class="alert alert-secondary">
+                    Nenhum livro disponível para empréstimo no momento.
+                </div>
+
+                <p class="text-muted small mb-4">
+                    <i class="bi bi-info-circle"></i>
+                    A data prevista de devolução considera o maior prazo entre os livros selecionados.
+                    Acima de 2 livros, são acrescidos 2 dias por livro adicional.
+                </p>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary"
+                            th:disabled="${#lists.isEmpty(livrosDisponiveis)}">
+                        <i class="bi bi-arrow-left-right"></i> Realizar empréstimo
+                    </button>
+                    <a th:href="@{/}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+<script>
+    // impede o envio do formulario sem nenhum livro selecionado
+    document.querySelector('form').addEventListener('submit', function (evento) {
+        const selecionados = document.querySelectorAll('input[name="livroIds"]:checked');
+        if (selecionados.length === 0) {
+            evento.preventDefault();
+            alert('Selecione pelo menos um livro para realizar o empréstimo.');
+        }
+    });
+</script>
+</body>
+</html>
