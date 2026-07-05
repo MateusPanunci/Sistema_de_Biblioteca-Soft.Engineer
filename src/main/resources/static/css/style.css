@@ -1,0 +1,185 @@
+/* estilos gerais do sistema de biblioteca */
+/* paleta baseada nos prototipos em docs/PrototipoTelas */
+
+body {
+    background-color: #f4f6f5;
+    min-height: 100vh;
+}
+
+/* sidebar */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    background-color: #12291f; /* verde escuro do prototipo */
+    color: #fff;
+    padding: 0;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 18px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo i {
+    font-size: 1.5rem;
+    color: #7fd1a8;
+}
+
+.sidebar-menu {
+    padding: 12px 8px;
+}
+
+.sidebar-menu .nav-link {
+    color: #b9c8c0;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-menu .nav-link:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-menu .nav-link.active {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.sidebar-footer {
+    padding: 16px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #b9c8c0;
+    font-size: 0.9rem;
+}
+
+/* ===== botoes com o verde do prototipo ===== */
+
+.btn-primary {
+    background-color: #14532d;
+    border-color: #14532d;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #0f3f22 !important;
+    border-color: #0f3f22 !important;
+}
+
+.btn-outline-primary {
+    color: #14532d;
+    border-color: #14532d;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:active {
+    background-color: #14532d !important;
+    border-color: #14532d !important;
+    color: #fff;
+}
+
+/* conteudo principal*/
+
+.conteudo {
+    margin-left: 240px;
+    padding: 28px 32px;
+}
+
+.titulo-pagina {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #23312a;
+    margin-bottom: 4px;
+}
+
+.subtitulo-pagina {
+    color: #7d8a83;
+    font-size: 0.92rem;
+    margin-bottom: 24px;
+}
+
+/* cards da visao geral */
+
+.card-resumo {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.card-resumo .icone {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.card-resumo .valor {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #23312a;
+}
+
+.card-resumo .rotulo {
+    color: #7d8a83;
+    font-size: 0.85rem;
+}
+
+/* tabelas */
+
+.card-tabela {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.table th {
+    color: #7d8a83;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom-width: 1px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* formularios */
+
+.card-formulario {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    max-width: 640px;
+}
+
+/* lista de livros disponiveis no emprestimo */
+.lista-livros .form-check {
+    padding: 12px 16px 12px 40px;
+    border: 1px solid #e2e8e4;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.lista-livros .form-check:hover {
+    background-color: #f7faf8;
+}
