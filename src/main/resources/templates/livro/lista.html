@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Livros')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: sidebar('livros')}"></nav>
+
+<main class="conteudo">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+        <div>
+            <h1 class="titulo-pagina">Livros</h1>
+            <p class="subtitulo-pagina">Acervo de livros cadastrados no sistema</p>
+        </div>
+        <a th:href="@{/livros/novo}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Novo Livro
+        </a>
+    </div>
+
+    <div th:replace="~{fragments/layout :: alertas}"></div>
+
+    <div class="card card-tabela">
+        <div class="card-body">
+            <!-- busca simples feita no navegador, filtra as linhas da tabela -->
+            <div class="input-group mb-3" style="max-width: 380px;">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" id="campoBusca" class="form-control"
+                       placeholder="Buscar por título, autor ou ISBN...">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table" id="tabelaLivros">
+                    <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>ISBN</th>
+                        <th>Prazo (dias)</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="livro : ${livros}">
+                        <td th:text="${livro.titulo}">Título</td>
+                        <td th:text="${livro.autor}">Autor</td>
+                        <td th:text="${livro.isbn} ?: '-'">ISBN</td>
+                        <td th:text="${livro.prazoDevolucaoDias}">7</td>
+                        <td>
+                            <span th:if="${livro.reservado}" class="badge text-bg-secondary">Reservado</span>
+                            <span th:if="${!livro.reservado and livro.disponivel}" class="badge text-bg-success">Disponível</span>
+                            <span th:if="${!livro.reservado and !livro.disponivel}" class="badge text-bg-warning">Emprestado</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(livros)}">
+                        <td colspan="5" class="text-center text-muted">Nenhum livro cadastrado ainda.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+<script>
+    // filtro da tabela conforme o usuario digita na busca
+    document.getElementById('campoBusca').addEventListener('input', function () {
+        const termo = this.value.toLowerCase();
+        document.querySelectorAll('#tabelaLivros tbody tr').forEach(function (linha) {
+            linha.style.display = linha.textContent.toLowerCase().includes(termo) ? '' : 'none';
+        });
+    });
+</script>
+</body>
+</html>
