@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -85,7 +87,7 @@ class EmprestimoControllerTest {
     // CT-10 — Erro ao emprestar para aluno inexistente
     @Test
     void deveRedirecionarComErroQuandoAlunoInexistente() throws Exception {
-        when(emprestimoService.emprestar("2024001", anyList()))
+        when(emprestimoService.emprestar(eq("2024001"), anyList()))
                 .thenThrow(new RuntimeException("Aluno inexistente"));
 
         mockMvc.perform(post("/emprestimos/novo")
@@ -99,7 +101,7 @@ class EmprestimoControllerTest {
     // CT-11 — Erro ao emprestar para aluno com débito
     @Test
     void deveRedirecionarComErroQuandoAlunoPossuirDebito() throws Exception {
-        when(emprestimoService.emprestar("2024001", anyList()))
+        when(emprestimoService.emprestar(eq("2024001"), anyList()))
                 .thenThrow(new RuntimeException("Aluno possui débito pendente"));
 
         mockMvc.perform(post("/emprestimos/novo")
