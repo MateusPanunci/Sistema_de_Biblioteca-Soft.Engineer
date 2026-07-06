@@ -38,6 +38,11 @@ public class LivroController {
                             @RequestParam Integer prazoDevolucaoDias,
                             @RequestParam(required = false) boolean reservado,
                             RedirectAttributes redirectAttributes) {
+        if (titulo == null || titulo.isBlank() || autor == null || autor.isBlank() || prazoDevolucaoDias == null || prazoDevolucaoDias <= 0) {
+            redirectAttributes.addFlashAttribute("erro", "Título, autor e prazo de devolução são obrigatórios.");
+            return "redirect:/livros/novo";
+        }
+
         // verifica duplicado (só se foi informado)
         if (isbn != null && !isbn.isBlank() && livroRepository.findByIsbn(isbn).isPresent()) {
             redirectAttributes.addFlashAttribute("erro", "ISBN já cadastrado no sistema.");
