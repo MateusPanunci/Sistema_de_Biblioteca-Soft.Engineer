@@ -39,11 +39,12 @@ class EmprestimoServiceTest {
     @InjectMocks // Objeto ao qual vai injetar os mocks acima simulados/fictícios
     private EmprestimoService emprestimoService;
 
+    // CT-10 — Erro ao emprestar para aluno inexistente
     @Test
     void deveLancarExcecaoQuandoAlunoNaoExistir() {
         // Configura o comportamento do mock alunoRepository para retornar um Optional vazio 
         // quando o método findByRa for chamado com o RA "2024001"
-        when(alunoRepository.findByRa("2024001")).thenReturn(Optional.empty());
+        when(alunoRepository.findByRa("2024001")).thenReturn(Optional.empty()); 
 
         RuntimeException exception = assertThrows(RuntimeException.class,
                 () -> emprestimoService.emprestar("2024001", List.of(1L)));
@@ -56,20 +57,39 @@ class EmprestimoServiceTest {
         verifyNoInteractions(livroRepository, emprestimoRepository);
     }
 
+    // CT-11 — Erro ao emprestar para aluno com débito
     @Test
     void deveLancarExcecaoQuandoAlunoPossuirDebito() {
         Aluno aluno = new Aluno("Maria Silva", "2024001");
         aluno.setPossuiDebito(true);
         when(alunoRepository.findByRa("2024001")).thenReturn(Optional.of(aluno));
 
+        // Tem que retornar um erro  
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> emprestimoService.emprestar("2024001", List.of(1L)));
+                () -> emprestimoService.emprestar("2024001", List.of(1L))); 
+            
 
-    
+        // Com está mensagem de erro especificamente
         assertEquals("Aluno possui débito pendente", exception.getMessage());
+
+        // E sem ter interagido com estas repositories
         verifyNoInteractions(livroRepository, emprestimoRepository);
     }
 
+    // CT-12 — Erro ao tentar emprestar sem selecionar livro
+    @Test
+    void deveLancarExcecaoQuandoListaDeLivrosForVazia() {
+        Aluno aluno = new Aluno("Maria Silva", "2024001");
+        when(alunoRepository.findByRa("2024001")).thenReturn(Optional.of(aluno));
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> emprestimoService.emprestar("2024001", List.of()));
+
+        assertEquals("Nenhum dos livros solicitados está disponível para empréstimo", exception.getMessage());
+        verifyNoInteractions(emprestimoRepository);
+    }
+
+    // CT-13 — Livro indisponível não aparece para empréstimo
     @Test
     void deveLancarExcecaoQuandoNenhumLivroDisponivel() {
         Aluno aluno = new Aluno("Maria Silva", "2024001");
@@ -86,6 +106,31 @@ class EmprestimoServiceTest {
         verifyNoInteractions(emprestimoRepository);
     }
 
+    // CT-08 — Sucesso no empréstimo de um livro
+    @Test
+    void deveRealizarEmprestimoValidoComUmLivro() {
+        Aluno aluno = new Aluno("Maria Silva", "2024001");
+        when(alunoRepository.findByRa("2024001")).thenReturn(Optional.of(aluno)); 
+
+        Livro livro1 = new Livro("Livro A", "Autor A", "ISBN-001", 5);
+
+        when(livroRepository.findById(1L)).thenReturn(Optional.of(livro1));
+        
+        // Configura o comportamento do mock emprestimoRepository para retornar o próprio objeto Emprestimo
+        // invocation é o objeto que está sendo salvo, e getArgument(0) retorna o primeiro argumento passado para o método save
+        when(emprestimoRepository.save(any(Emprestimo.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Emprestimo emprestimo = emprestimoService.emprestar("2024001", List.of(1L));
+
+        assertEquals(Emprestimo.StatusEmprestimo.ATIVO, emprestimo.getStatus());
+        assertEquals(LocalDate.now().plusDays(5), emprestimo.getDataPrevistaDevolucao());
+        assertFalse(livro1.isDisponivel()); // se o livro não estiver disponível, o teste passa, pois le tem que aparecer como emprestado
+        verify(livroRepository).save(livro1);
+        verify(emprestimoRepository).save(any(Emprestimo.class));
+    }
+
+    // CT-09 — Sucesso no empréstimo de múltiplos livros
     @Test
     void deveRealizarEmprestimoValidoComMultiplosLivros() {
         Aluno aluno = new Aluno("Maria Silva", "2024001");

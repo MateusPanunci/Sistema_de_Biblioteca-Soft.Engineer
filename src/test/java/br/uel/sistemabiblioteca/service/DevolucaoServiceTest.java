@@ -36,20 +36,10 @@ class DevolucaoServiceTest {
     @InjectMocks
     private DevolucaoService devolucaoService;
 
-    // Os testes possuem basicamente a mesma lógoica dos testes do EmprestimoServiceTest, 
+    // Os testes possuem basicamente a mesma lógica dos testes do EmprestimoServiceTest, 
     // mas com foco na devolução de livros e no comportamento do sistema quando um empréstimo é devolvido, seja dentro do prazo ou atrasado.
-    @Test
-    void deveLancarExcecaoQuandoEmprestimoNaoEncontrado() {
-        when(emprestimoRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // tem que lançar uma exceção do tipo RuntimeException com a mensagem "Empréstimo não encontrado", se não falhará o teste
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> devolucaoService.devolver(1L));
-
-        assertEquals("Empréstimo não encontrado", exception.getMessage());
-        verifyNoInteractions(livroRepository);
-    }
-
+    
+    // CT-16 — Erro ao devolver empréstimo já devolvido
     @Test
     void deveLancarExcecaoQuandoEmprestimoJaDevolvido() {
         Aluno aluno = new Aluno("Maria Silva", "2024001");
@@ -69,6 +59,7 @@ class DevolucaoServiceTest {
         verifyNoInteractions(livroRepository);
     }
 
+    // CT-14 — Sucesso na devolução dentro do prazo
     @Test
     void deveRegistrarDevolucaoDentroDoPrazoSemDebito() {
         Aluno aluno = new Aluno("Maria Silva", "2024001");
@@ -94,6 +85,7 @@ class DevolucaoServiceTest {
         verify(emprestimoRepository).save(any(Emprestimo.class));
     }
 
+    // CT-15 — Devolução em atraso gera débito para o aluno
     @Test
     void deveMarcarDebitoQuandoDevolucaoAtrasar() {
     

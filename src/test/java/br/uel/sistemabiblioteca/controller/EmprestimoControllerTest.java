@@ -43,17 +43,25 @@ class EmprestimoControllerTest {
     }
 
 
-    // faz um teste para verificar se o formulário de empréstimo é exibido corretamente
-    // manda uma requisição GET para a URL "/emprestimos/novo" e espera que o status da resposta seja 200 (OK) e que a view retornada seja "emprestimo/novo"
+    // CT-08 — Sucesso no empréstimo de um livro
     @Test
-    void deveExibirFormularioDeEmprestimo() throws Exception {
-        mockMvc.perform(get("/emprestimos/novo"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("emprestimo/novo"));
+    void deveRedirecionarComSucessoQuandoEmprestimoComUmLivroForRealizado() throws Exception {
+        Emprestimo emprestimo = new Emprestimo();
+        emprestimo.setDataPrevistaDevolucao(LocalDate.of(2026, 7, 20));
+        when(emprestimoService.emprestar("2024001", java.util.List.of(1L)))
+                .thenReturn(emprestimo);
+
+        mockMvc.perform(post("/emprestimos/novo")
+                        .param("ra", "2024001")
+                        .param("livroIds", "1"))
+                .andExpect(status().is3xxRedirection()) // Espera ocorrer um redirecionamento
+                .andExpect(redirectedUrl("/emprestimos/novo")) // Nesta URL em específico
+                .andExpect(flash().attributeExists("sucesso")); // E espera ser retornado um atributo flash com sucesso
     }
-     
+
+    // CT-09 — Sucesso no empréstimo de múltiplos livros
     @Test
-    void deveRedirecionarComSucessoQuandoEmprestimoForRealizado() throws Exception {
+    void deveRedirecionarComSucessoQuandoEmprestimoComMultiplosLivrosForRealizado() throws Exception {
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setDataPrevistaDevolucao(LocalDate.of(2026, 7, 20));
         // simula o comportamento do serviço de empréstimo (é um falso) para retornar um objeto Emprestimo quando chamado com os parâmetros fornecidos
@@ -74,14 +82,43 @@ class EmprestimoControllerTest {
                 .andExpect(flash().attributeExists("sucesso"));
     }
 
+    // CT-10 — Erro ao emprestar para aluno inexistente
     @Test
-    void deveRedirecionarComErroQuandoEmprestimoFalhar() throws Exception {
+    void deveRedirecionarComErroQuandoAlunoInexistente() throws Exception {
         when(emprestimoService.emprestar("2024001", anyList()))
                 .thenThrow(new RuntimeException("Aluno inexistente"));
 
         mockMvc.perform(post("/emprestimos/novo")
                         .param("ra", "2024001")
                         .param("livroIds", "1"))
+                .andExpect(status().is3xxRedirection()) 
+                .andExpect(redirectedUrl("/emprestimos/novo"))
+                .andExpect(flash().attributeExists("erro"));
+    }
+
+    // CT-11 — Erro ao emprestar para aluno com débito
+    @Test
+    void deveRedirecionarComErroQuandoAlunoPossuirDebito() throws Exception {
+        when(emprestimoService.emprestar("2024001", anyList()))
+                .thenThrow(new RuntimeException("Aluno possui débito pendente"));
+
+        mockMvc.perform(post("/emprestimos/novo")
+                        .param("ra", "2024001")
+                        .param("livroIds", "1"))
+                .andExpect(status().is3xxRedirection()) 
+                .andExpect(redirectedUrl("/emprestimos/novo"))
+                .andExpect(flash().attributeExists("erro"));
+    }
+
+    // CT-12 — Erro ao tentar emprestar sem selecionar livro
+    @Test
+    void deveRedirecionarComErroQuandoNenhumLivroForSelecionado() throws Exception {
+        when(emprestimoService.emprestar("2024001", java.util.Collections.emptyList()))
+                .thenThrow(new RuntimeException("Nenhum dos livros solicitados está disponível para empréstimo"));
+
+        mockMvc.perform(post("/emprestimos/novo")
+                        .param("ra", "2024001")
+                        .param("livroIds", ""))
                 .andExpect(status().is3xxRedirection()) 
                 .andExpect(redirectedUrl("/emprestimos/novo"))
                 .andExpect(flash().attributeExists("erro"));

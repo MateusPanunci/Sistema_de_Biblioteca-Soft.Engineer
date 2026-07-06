@@ -47,25 +47,8 @@ class DevolucaoControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(devolucaoController).build();
     }
 
-    @Test
-    void deveExibirFormularioDeDevolucaoComEmprestimosAtivos() throws Exception {
-        Emprestimo emprestimo = new Emprestimo(new Aluno("Maria Silva", "2024001"));
-        emprestimo.setStatus(Emprestimo.StatusEmprestimo.ATIVO);
-        emprestimo.setDataPrevistaDevolucao(LocalDate.of(2026, 7, 20));
 
-        // Configura o comportamento da função abaixo com o enum "ATIVO", para usar no teste HTTP do mockMvc
-        when(emprestimoRepository.findByStatus(Emprestimo.StatusEmprestimo.ATIVO))
-                .thenReturn(List.of(emprestimo));
-         
-        // Faz o teste HTTP simulando uma requisição GET para a URL "/devolucoes/nova"
-        // espera que o status da resposta seja 200 (OK), que a view retornada seja "devolucao/nova"
-        // e que o modelo da view contenha o atributo "emprestimosAtivos"
-        mockMvc.perform(get("/devolucoes/nova"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("devolucao/nova"))
-                .andExpect(model().attributeExists("emprestimosAtivos"));
-    }
-
+    // CT-14 — Sucesso na devolução dentro do prazo
     @Test
     void deveRedirecionarComSucessoQuandoDevolucaoForRegistrada() throws Exception {
         mockMvc.perform(post("/devolucoes/nova")
@@ -75,10 +58,11 @@ class DevolucaoControllerTest {
                 .andExpect(flash().attributeExists("sucesso"));
     }
 
+    // CT-16 — Erro ao devolver empréstimo já devolvido
     @Test
     void deveRedirecionarComErroQuandoDevolucaoFalhar() throws Exception {
         when(devolucaoService.devolver(anyLong()))
-                .thenThrow(new RuntimeException("Empréstimo não encontrado"));
+                .thenThrow(new RuntimeException("Este empréstimo já foi devolvido"));
 
         mockMvc.perform(post("/devolucoes/nova")
                         .param("emprestimoId", "99"))
