@@ -21,8 +21,12 @@ public class EmprestimoController {
 
     // exibe o formulario de empréstimo
     @GetMapping("/novo")
-    public String formularioEmprestimo() {
-        return "emprestimo/novo"; // src/main/resources/templates/emprestimo/novo.html
+    public String formularioEmprestimo(Model model) {
+        model.addAttribute("livrosDisponiveis",
+                livroRepository.findAll().stream()
+                        .filter(Livro::podeSerEmprestado)
+                        .toList());
+        return "emprestimo/novo";
     }
 
     // processa o formulário e realiza o empréstimo
