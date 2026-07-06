@@ -27,7 +27,7 @@ erDiagram
     }
 
     emprestimo_livro {
-        bigint emprestimo_id PK_FK "NOT NULL"
+        bigint emprestimo_id PK, FK "NOT NULL"
         bigint livro_id PK_FK "NOT NULL"
     }
 
