@@ -1,6 +1,7 @@
 package br.uel.sistemabiblioteca.controller;
 
 import br.uel.sistemabiblioteca.model.Aluno;
+import br.uel.sistemabiblioteca.controller.AlunoController;
 import br.uel.sistemabiblioteca.repository.AlunoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

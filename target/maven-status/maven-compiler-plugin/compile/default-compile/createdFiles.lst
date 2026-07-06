@@ -1,8 +1,0 @@
-br/uel/sistemabiblioteca/repository/AlunoRepository.class
-br/uel/sistemabiblioteca/model/Emprestimo$StatusEmprestimo.class
-br/uel/sistemabiblioteca/model/Aluno.class
-br/uel/sistemabiblioteca/model/Livro.class
-br/uel/sistemabiblioteca/repository/EmprestimoRepository.class
-br/uel/sistemabiblioteca/SistemaBibliotecaApplication.class
-br/uel/sistemabiblioteca/repository/LivroRepository.class
-br/uel/sistemabiblioteca/model/Emprestimo.class

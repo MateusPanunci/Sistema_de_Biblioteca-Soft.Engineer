@@ -75,25 +75,6 @@ class LivroControllerTest {
         assertTrue(captor.getValue().isReservado()); // CT-4
     }
 
-    // CT-03 — Erro ao cadastrar ISBN duplicado
-    @Test 
-    void deveBloquearCadastroQuandoIsbnJaExistir() throws Exception {
-        when(livroRepository.findByIsbn("ISBN-001"))
-                .thenReturn(Optional.of(new Livro("Existente", "Autor", "ISBN-001", 7)));
-
-        mockMvc.perform(post("/livros/novo")
-                        .param("titulo", "Livro A")
-                        .param("autor", "Autor A")
-                        .param("isbn", "ISBN-001")
-                        .param("prazoDevolucaoDias", "7"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/livros/novo"))
-                .andExpect(flash().attributeExists("erro"));
-
-        // garante que o método save não foi chamado, impedindo o cadastro do livro
-        verify(livroRepository, never()).save(org.mockito.ArgumentMatchers.any(Livro.class));
-    }
-
     // CT-02 — Erro ao salvar com campos obrigatórios vazios
     @Test
     void deveBloquearCadastroQuandoCamposObrigatoriosForemVazios() throws Exception {
@@ -106,6 +87,26 @@ class LivroControllerTest {
                 .andExpect(redirectedUrl("/livros/novo"))
                 .andExpect(flash().attributeExists("erro"));
 
+        // Verifica se o método save não foi chamado, impedindo o cadastro do livro
+        verify(livroRepository, never()).save(org.mockito.ArgumentMatchers.any(Livro.class));
+    }
+
+    // CT-03 — Erro ao cadastrar ISBN duplicado
+    @Test 
+    void deveBloquearCadastroQuandoIsbnJaExistir() throws Exception {
+        when(livroRepository.findByIsbn("ISBN-001"))
+                .thenReturn(Optional.of(new Livro("Livro A", "Autor A", "ISBN-001", 7)));
+
+        mockMvc.perform(post("/livros/novo")
+                        .param("titulo", "Livro A")
+                        .param("autor", "Autor A")
+                        .param("isbn", "ISBN-001")
+                        .param("prazoDevolucaoDias", "7"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/livros/novo"))
+                .andExpect(flash().attributeExists("erro"));
+
+        // garante que o método save não foi chamado, impedindo o cadastro do livro
         verify(livroRepository, never()).save(org.mockito.ArgumentMatchers.any(Livro.class));
     }
 }

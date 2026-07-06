@@ -87,6 +87,7 @@ class EmprestimoControllerTest {
     // CT-10 — Erro ao emprestar para aluno inexistente
     @Test
     void deveRedirecionarComErroQuandoAlunoInexistente() throws Exception {
+        // usa o matcher eq() para comparar o primeiro parâmetro com "2024001" e o segundo parâmetro com qualquer lista
         when(emprestimoService.emprestar(eq("2024001"), anyList()))
                 .thenThrow(new RuntimeException("Aluno inexistente"));
 
