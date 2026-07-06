@@ -1,6 +1,7 @@
 package br.uel.sistemabiblioteca.controller;
 
 import br.uel.sistemabiblioteca.model.Emprestimo;
+import br.uel.sistemabiblioteca.controller.EmprestimoController;
 import br.uel.sistemabiblioteca.service.EmprestimoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,21 +15,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
 class EmprestimoControllerTest {
 
     // Simula um objeto do tipo EmprestimoService para ser injetado no controller
-    @Mock 
+    @Mock
     private EmprestimoService emprestimoService;
 
     // Injeção do mock EmprestimoService no controller EmprestimoController
@@ -69,13 +67,13 @@ class EmprestimoControllerTest {
         // simula o comportamento do serviço de empréstimo (é um falso) para retornar um objeto Emprestimo quando chamado com os parâmetros fornecidos
         // ou seja, se o método emprestar for chamado com o RA "2024001" e uma lista de IDs de livros contendo 1L e 2L, ele retornará o objeto emprestimo criado acima
         when(emprestimoService.emprestar("2024001", java.util.List.of(1L, 2L)))
-                .thenReturn(emprestimo); 
+                .thenReturn(emprestimo);
 
         mockMvc.perform(post("/emprestimos/novo")
                         .param("ra", "2024001")
                         .param("livroIds", "1", "2"))
                 // espera um redirecionamento como resposta
-                .andExpect(status().is3xxRedirection()) 
+                .andExpect(status().is3xxRedirection())
 
                 // esse redirecionamento é para a URL "/emprestimos/novo"
                 .andExpect(redirectedUrl("/emprestimos/novo"))
@@ -94,7 +92,7 @@ class EmprestimoControllerTest {
         mockMvc.perform(post("/emprestimos/novo")
                         .param("ra", "2024001")
                         .param("livroIds", "1"))
-                .andExpect(status().is3xxRedirection()) 
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/emprestimos/novo"))
                 .andExpect(flash().attributeExists("erro"));
     }
@@ -108,7 +106,7 @@ class EmprestimoControllerTest {
         mockMvc.perform(post("/emprestimos/novo")
                         .param("ra", "2024001")
                         .param("livroIds", "1"))
-                .andExpect(status().is3xxRedirection()) 
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/emprestimos/novo"))
                 .andExpect(flash().attributeExists("erro"));
     }
@@ -122,7 +120,7 @@ class EmprestimoControllerTest {
         mockMvc.perform(post("/emprestimos/novo")
                         .param("ra", "2024001")
                         .param("livroIds", ""))
-                .andExpect(status().is3xxRedirection()) 
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/emprestimos/novo"))
                 .andExpect(flash().attributeExists("erro"));
     }

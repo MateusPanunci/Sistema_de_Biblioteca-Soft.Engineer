@@ -1,8 +1,8 @@
 package br.uel.sistemabiblioteca.controller;
 
-import br.uel.sistemabiblioteca.model.Aluno;
-import br.uel.sistemabiblioteca.model.Emprestimo;
+
 import br.uel.sistemabiblioteca.repository.EmprestimoRepository;
+import br.uel.sistemabiblioteca.controller.DevolucaoController;
 import br.uel.sistemabiblioteca.service.DevolucaoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,18 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 
 @ExtendWith(MockitoExtension.class)
 class DevolucaoControllerTest {
